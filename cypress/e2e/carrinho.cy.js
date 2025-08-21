@@ -7,10 +7,11 @@ describe('template spec', () => {
     cy.get('[data-test="login-button"]').click()
   //act
     cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click()
+    cy.get('[data-test="add-to-cart-sauce-labs-bike-light"]').click()
 
 
   //assert
-    cy.get('[data-test="shopping-cart-link"]').should('be.visible').and('have.text', '1')
+    cy.get('[data-test="shopping-cart-link"]').should('be.visible').and('have.text', '2')
 
   })
 })
