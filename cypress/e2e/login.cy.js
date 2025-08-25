@@ -1,32 +1,45 @@
 describe('login', () => {
-    it('realizar login com sucesso', () => {
+    it('Should Login', () => {
         //arrange
-        cy.visit('https://www.saucedemo.com')
+        cy.visit('/')
         //act
-        cy.get('[data-test="username"]').type('standard_user')
-        cy.get('[data-test="password"]').type('secret_sauce')
-        cy.get('[data-test="login-button"]').click()
+        cy.login()
         //assert
         cy.url().should('eq', 'https://www.saucedemo.com/inventory.html')
     })
 
 
-    it('falhar no login, credenciais inválidas', () => {
+    it('Should fail, wrong email', () => {
         //arrange
-        cy.visit('https://www.saucedemo.com')
+        cy.visit('/')
         //act
-        cy.get('[data-test="username"]').type('invalid_user')
-        cy.get('[data-test="password"]').type('inexisting_sauce')
-        cy.get('[data-test="login-button"]').click()
+        cy.login('wrong_user')
         //assert
         cy.get('[data-test="error"]').should('contain', 'Epic sadface: Username and password do not match any user in this service')
-    
         cy.url().should('eq', 'https://www.saucedemo.com/')
-    
     })
 
 
+    it('Should fail, wrong password', () => {
+        //arrange
+        cy.visit('/')
+        //act
+        cy.login('standard_user' ,'wrong_pass');
+        //assert
+        cy.get('[data-test="error"]').should('contain', 'Epic sadface: Username and password do not match any user in this service')
+        cy.url().should('eq', 'https://www.saucedemo.com/')
+    })
     
+
+    it('Should fail, locked out', () => {
+        //arrange
+        cy.visit('https://www.saucedemo.com')
+        //act
+        cy.login('locked_out_user')
+        //assert
+        cy.get('[data-test="error"]').should('contain', 'Epic sadface: Sorry, this user has been locked out.')
+        cy.url().should('eq', 'https://www.saucedemo.com/')
+    })
 
 
 })
