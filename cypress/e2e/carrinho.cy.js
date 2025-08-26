@@ -9,7 +9,6 @@ describe('carrinho', () => {
     
     //assert
     cy.get('[data-test="shopping-cart-link"]').should('be.visible').and('have.text', '1')
-
   })
 
 
