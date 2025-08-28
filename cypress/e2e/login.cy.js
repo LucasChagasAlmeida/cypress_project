@@ -1,48 +1,51 @@
+import loginpage from '../pages/login'
+import inventoryPage from '../pages/inventory'
+
+
 describe('login', () => {
-    it('Should Login', () => {
+
+    beforeEach(() => {
         //arrange
         cy.visit('/')
+    })
+
+    afterEach(() => {
+        cy.screenshot(it.name)
+    })
+
+
+    it('Should Login', () => {
         //act
-        cy.login()
+        loginpage.login()
         //assert
-        cy.url().should('eq', 'https://www.saucedemo.com/inventory.html')
-        cy.screenshot()
+        inventoryPage.verifyLink()
     })
 
 
     it('Should fail, wrong email', () => {
-        //arrange
-        cy.visit('/')
         //act
-        cy.login('wrong_user')
+        loginpage.login('wrong_user')
         //assert
-        cy.get('[data-test="error"]').should('contain', 'Epic sadface: Username and password do not match any user in this service')
-        cy.url().should('eq', 'https://www.saucedemo.com/')
-        cy.screenshot()
+        loginpage.checkErrorCredentials()
+        loginpage.checkUrl()
     })
 
 
     it('Should fail, wrong password', () => {
-        //arrange
-        cy.visit('/')
         //act
-        cy.login('standard_user' ,'wrong_pass');
+        loginpage.login('standard_user' ,'wrong_pass');
         //assert
-        cy.get('[data-test="error"]').should('contain', 'Epic sadface: Username and password do not match any user in this service')
-        cy.url().should('eq', 'https://www.saucedemo.com/')
-        cy.screenshot()
+        loginpage.checkErrorCredentials()
+        loginpage.checkUrl()
     })
     
 
     it('Should fail, locked out', () => {
-        //arrange
-        cy.visit('https://www.saucedemo.com')
         //act
-        cy.login('locked_out_user')
+        loginpage.login('locked_out_user')
         //assert
-        cy.get('[data-test="error"]').should('contain', 'Epic sadface: Sorry, this user has been locked out.')
-        cy.url().should('eq', 'https://www.saucedemo.com/')
-        cy.screenshot()
+        loginpage.checkErrorLockedOut()
+        loginpage.checkUrl()
     })
 
 

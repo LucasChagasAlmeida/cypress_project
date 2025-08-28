@@ -1,44 +1,49 @@
+import loginpage from '../pages/login'
+import inventoryPage from '../pages/inventory'
+import header from '../pages/header'
+import cartPage from '../pages/cart'
+
 describe('carrinho', () => {
+  beforeEach(() => {
+      //arrange
+      cy.visit('/')
+      loginpage.login()
+    })
+
+    afterEach(() => {
+        cy.screenshot()
+    })
+
+
   it('Should add to backpack', () => {
-    //arrange
-    cy.visit('/')
-    cy.login()
-    
     //act
-    cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click()
-    
+    inventoryPage.addProduct('Sauce Labs Backpack')
     //assert
-    cy.get('[data-test="shopping-cart-link"]').should('be.visible').and('have.text', '1')
+    header.checkCartAmount(1)
+    header.goToCart()
+    cartPage.verifyLink()
+    cartPage.checkItem('Sauce Labs Backpack')
+    
   })
 
 
   it('Should remove from backpack, main page', () => {
-    //arrange  
-    cy.visit('/')
-    cy.login()
-    cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click()
-    
     //act
-    cy.get('[data-test="remove-sauce-labs-backpack"]').click() 
-
+    inventoryPage.addProduct('Sauce Labs Backpack')
+    header.checkCartAmount(1)
+    inventoryPage.removeProduct('Sauce Labs Backpack')
     //assert
-    cy.get('.shopping_cart_badge').should('not.exist')
-    cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').should('exist')
+    header.checkCartAmount(0)
   })
 
   it('Should remove from backpack, backpack page', () => {
-    //arrange  
-    cy.visit('/')
-    cy.login()
-    cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').click()
-    
     //act
-    cy.get('[data-test="shopping-cart-link"]').click() 
-    cy.get('[data-test="remove-sauce-labs-backpack"]').click()
-
+    inventoryPage.addProduct('Sauce Labs Backpack')
+    header.goToCart()
+    cartPage.verifyLink()
+    cartPage.removeItem('Sauce Labs Backpack')
     //assert
-    cy.get('.shopping_cart_badge').should('not.exist')
-    cy.get('[data-test="inventory-item"]').should('not.exist')
-    cy.get('[data-test="continue-shopping"]').should('be.visible')
+    header.checkCartAmount(0)
+    cartPage.checkItemRemoved('Sauce Labs Backpack')
   })
 })
