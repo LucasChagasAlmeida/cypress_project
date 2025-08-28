@@ -1,34 +1,12 @@
-name: Cypress E2E Tests
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+name: End-to-end tests
+on: push
 jobs:
-  run-cypress:
-    runs-on: ubuntu-latest
-
+  cypress-run:
+    runs-on: ubuntu-24.04
     steps:
-      - name: 🔄 Checkout o código
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: 🧰 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: 📦 Instalar dependências
-        run: npm install
-
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
-6
-
-      - name: 📤 Upload de screenshots em caso de falha
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: screenshots
-          path: cypress/screenshots
