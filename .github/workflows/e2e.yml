@@ -23,7 +23,7 @@ jobs:
         run: npm install
 
       - name: 🧪 Rodar testes Cypress
-        run: npx cypress run
+        uses: cypress-io/github-actions@v6
 
       - name: 📤 Upload de screenshots em caso de falha
         if: failure()
